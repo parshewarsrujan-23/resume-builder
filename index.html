@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ResumeCraft — Build a Professional Resume in Minutes</title>
+<meta name="description" content="Create an ATS-friendly, one-page professional resume with live preview and instant PDF download.">
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Source+Serif+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+
+<!-- Stylesheet -->
+<link rel="stylesheet" href="style.css">
+
+<!-- html2pdf.js for PDF generation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+
+<!-- ========================= NAVIGATION ========================= -->
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="#home" class="nav-logo">
+      <svg class="logo-mark" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="32" height="32" rx="9" fill="#1E3A8A"/>
+        <path d="M10 24V10.8C10 10.3582 10.3582 10 10.8 10H18.2C20.6 10 22.5 11.9 22.5 14.3V14.3C22.5 16.34 21.06 18.06 19.1 18.5L23 24H19.7L16.2 18.7H12.9V24H10Z" fill="#F8FAFC"/>
+        <path d="M12.9 12.5V16.2H17.9C19 16.2 19.9 15.35 19.9 14.35C19.9 13.35 19 12.5 17.9 12.5H12.9Z" fill="#1E3A8A"/>
+      </svg>
+      <span class="logo-text">Resume<span class="logo-accent">Craft</span></span>
+    </a>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home" class="nav-link active" data-link>Home</a></li>
+      <li><a href="#builder" class="nav-link" data-link>Resume Builder</a></li>
+      <li><a href="#features" class="nav-link" data-link>Features</a></li>
+      <li><a href="#about" class="nav-link" data-link>About</a></li>
+      <li><a href="#contact" class="nav-link" data-link>Contact</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <button class="btn btn-primary btn-sm ripple" id="navDownloadBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"/></svg>
+        <span>Download Resume</span>
+      </button>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ========================= HERO SECTION ========================= -->
+<header class="hero" id="home">
+  <div class="hero-bg-shape"></div>
+  <div class="hero-container">
+    <div class="hero-copy fade-in">
+      <span class="eyebrow">Free &middot; No sign-up &middot; ATS-friendly</span>
+      <h1>Craft a resume that gets you <span class="highlight">hired</span>, not filtered out.</h1>
+      <p class="hero-sub">Fill a clean form on the left, watch a recruiter-ready resume take shape on the right, then export a pixel-perfect one-page PDF — every time.</p>
+      <div class="hero-actions">
+        <a href="#builder" class="btn btn-primary btn-lg ripple">Start Building — It's Free</a>
+        <button type="button" class="btn btn-ghost btn-lg" id="heroSampleBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+          Try a Sample Resume
+        </button>
+      </div>
+      <div class="hero-trust">
+        <div class="trust-item"><strong>100%</strong><span>Client-side &amp; private</span></div>
+        <div class="trust-item"><strong>A4</strong><span>Perfect page fit</span></div>
+        <div class="trust-item"><strong>1-click</strong><span>PDF export</span></div>
+      </div>
+    </div>
+    <div class="hero-visual fade-in delay-1">
+      <div class="hero-card glass">
+        <div class="hero-card-header">
+          <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+        </div>
+        <div class="hero-card-mockup">
+          <div class="mock-avatar"></div>
+          <div class="mock-line w-70"></div>
+          <div class="mock-line w-40 thin"></div>
+          <div class="mock-divider"></div>
+          <div class="mock-line w-90 thin"></div>
+          <div class="mock-line w-80 thin"></div>
+          <div class="mock-line w-60 thin"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ========================= BUILDER SECTION ========================= -->
+<main class="builder-section" id="builder">
+  <div class="section-heading">
+    <span class="eyebrow center">Resume Builder</span>
+    <h2>Type on the left. Watch it happen on the right.</h2>
+  </div>
+
+  <div class="builder-layout">
+
+    <!-- ===================== FORM (LEFT / 45%) ===================== -->
+    <section class="form-panel glass" aria-label="Resume input form">
+      <form id="resumeForm" novalidate>
+
+        <!-- Personal Information -->
+        <div class="form-section">
+          <h3 class="form-section-title"><span class="icon-badge">01</span> Personal Information</h3>
+
+          <div class="photo-upload">
+            <div class="photo-preview" id="photoPreview">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+            </div>
+            <div class="photo-upload-controls">
+              <label for="photoInput" class="btn btn-outline btn-sm">Upload Photo</label>
+              <input type="file" id="photoInput" accept="image/*" hidden>
+              <button type="button" class="btn btn-text btn-sm" id="removePhotoBtn">Remove</button>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="fullName">Full Name <span class="req">*</span></label>
+              <input type="text" id="fullName" placeholder="Jordan Watson" required>
+              <span class="error-msg" id="err-fullName">Please enter your full name.</span>
+            </div>
+            <div class="form-field">
+              <label for="jobTitle">Job Title</label>
+              <input type="text" id="jobTitle" placeholder="Senior Product Designer">
+            </div>
+            <div class="form-field">
+              <label for="phone">Phone <span class="req">*</span></label>
+              <input type="tel" id="phone" placeholder="+1 (555) 123-4567" required>
+              <span class="error-msg" id="err-phone">Please enter a valid phone number.</span>
+            </div>
+            <div class="form-field">
+              <label for="email">Email <span class="req">*</span></label>
+              <input type="email" id="email" placeholder="jordan@email.com" required>
+              <span class="error-msg" id="err-email">Please enter a valid email address.</span>
+            </div>
+            <div class="form-field">
+              <label for="linkedin">LinkedIn</label>
+              <input type="text" id="linkedin" placeholder="linkedin.com/in/jordanwatson">
+            </div>
+            <div class="form-field">
+              <label for="github">GitHub</label>
+              <input type="text" id="github" placeholder="github.com/jordanwatson">
+            </div>
+            <div class="form-field">
+              <label for="portfolio">Portfolio</label>
+              <input type="text" id="portfolio" placeholder="jordanwatson.dev">
+            </div>
+            <div class="form-field">
+              <label for="address">Address</label>
+              <input type="text" id="address" placeholder="Austin, TX">
+            </div>
+          </div>
+        </div>
+
+        <!-- Professional Summary -->
+        <div class="form-section">
+          <h3 class="form-section-title"><span class="icon-badge">02</span> Professional Summary</h3>
+          <div class="form-field">
+            <label for="summary">Summary</label>
+            <textarea id="summary" rows="4" placeholder="Results-driven product designer with 6+ years crafting intuitive digital experiences for high-growth startups..."></textarea>
+          </div>
+        </div>
+
+        <!-- Technical Skills -->
+        <div class="form-section">
+          <h3 class="form-section-title"><span class="icon-badge">03</span> Technical Skills <span class="count-badge" id="skillsCount">0/20</span></h3>
+          <div class="tag-input-row">
+            <input type="text" id="skillInput" placeholder="e.g. Figma — press Enter to add">
+            <button type="button" class="btn btn-primary btn-sm" id="addSkillBtn">Add</button>
+          </div>
+          <div class="tag-list" id="skillsList"></div>
+        </div>
+
+        <!-- Projects -->
+        <div class="form-section">
+          <h3 class="form-section-title"><span class="icon-badge">04</span> Projects</h3>
+          <div class="entries-container" id="projectsContainer"></div>
+          <button type="button" class="btn btn-outline btn-sm add-entry-btn" id="addProjectBtn">+ Add Project</button>
+        </div>
+
+        <!-- Education -->
+        <div class="form-section">
+          <h3 class="form-section-title"><span class="icon-badge">05</span> Education</h3>
+          <div class="entries-container" id="educationContainer"></div>
+          <button type="button" class="btn btn-outline btn-sm add-entry-btn" id="addEducationBtn">+ Add Education</button>
+        </div>
+
+        <!-- Experience -->
+        <div class="form-section">
+          <h3 class="form-section-title"><span class="icon-badge">06</span> Experience</h3>
+          <div class="entries-container" id="experienceContainer"></div>
+          <button type="button" class="btn btn-outline btn-sm add-entry-btn" id="addExperienceBtn">+ Add Experience</button>
+        </div>
+
+        <!-- Certifications -->
+        <div class="form-section">
+          <h3 class="form-section-title"><span class="icon-badge">07</span> Certifications</h3>
+          <div class="entries-container" id="certificationsContainer"></div>
+          <button type="button" class="btn btn-outline btn-sm add-entry-btn" id="addCertificationBtn">+ Add Certification</button>
+        </div>
+
+        <!-- Achievements -->
+        <div class="form-section">
+          <h3 class="form-section-title"><span class="icon-badge">08</span> Achievements</h3>
+          <div class="entries-container" id="achievementsContainer"></div>
+          <button type="button" class="btn btn-outline btn-sm add-entry-btn" id="addAchievementBtn">+ Add Achievement</button>
+        </div>
+
+        <!-- Languages -->
+        <div class="form-section">
+          <h3 class="form-section-title"><span class="icon-badge">09</span> Languages</h3>
+          <div class="tag-input-row">
+            <input type="text" id="languageInput" placeholder="e.g. Spanish — press Enter to add">
+            <button type="button" class="btn btn-primary btn-sm" id="addLanguageBtn">Add</button>
+          </div>
+          <div class="tag-list" id="languagesList"></div>
+        </div>
+
+        <!-- Interests -->
+        <div class="form-section">
+          <h3 class="form-section-title"><span class="icon-badge">10</span> Interests</h3>
+          <div class="tag-input-row">
+            <input type="text" id="interestInput" placeholder="e.g. Chess — press Enter to add">
+            <button type="button" class="btn btn-primary btn-sm" id="addInterestBtn">Add</button>
+          </div>
+          <div class="tag-list" id="interestsList"></div>
+        </div>
+
+        <div class="form-footer-actions">
+          <button type="button" class="btn btn-primary btn-lg ripple" id="downloadBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"/></svg>
+            Download Resume
+          </button>
+          <button type="button" class="btn btn-outline btn-lg" id="sampleBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+            Load Sample Resume
+          </button>
+          <button type="button" class="btn btn-text btn-lg" id="resetBtn">Reset Form</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ===================== PREVIEW (RIGHT / 55%) ===================== -->
+    <section class="preview-panel" aria-label="Live resume preview">
+      <div class="preview-toolbar">
+        <span class="preview-label">Live Preview</span>
+        <span class="preview-page-tag">A4 &middot; 210 &times; 297mm</span>
+      </div>
+      <div class="preview-stage">
+        <div class="resume-page" id="resumePage">
+          <!-- Resume content is rendered here by script.js -->
+          <div class="resume-inner" id="resumeInner">
+
+            <header class="r-header">
+              <div class="r-header-text">
+                <h1 id="r-name">Your Name</h1>
+                <p id="r-title" class="r-job-title">Job Title</p>
+                <div class="r-contact" id="r-contact"></div>
+              </div>
+              <div class="r-photo" id="r-photo"></div>
+            </header>
+
+            <section class="r-section" id="r-summary-section" hidden>
+              <h2>Profile</h2>
+              <p id="r-summary"></p>
+            </section>
+
+            <section class="r-section" id="r-skills-section" hidden>
+              <h2>Technical Skills</h2>
+              <div class="r-skills" id="r-skills"></div>
+            </section>
+
+            <section class="r-section" id="r-experience-section" hidden>
+              <h2>Experience</h2>
+              <div id="r-experience"></div>
+            </section>
+
+            <section class="r-section" id="r-projects-section" hidden>
+              <h2>Projects</h2>
+              <div id="r-projects"></div>
+            </section>
+
+            <section class="r-section" id="r-education-section" hidden>
+              <h2>Education</h2>
+              <div id="r-education"></div>
+            </section>
+
+            <section class="r-section" id="r-certifications-section" hidden>
+              <h2>Certifications</h2>
+              <ul id="r-certifications"></ul>
+            </section>
+
+            <section class="r-section" id="r-achievements-section" hidden>
+              <h2>Achievements</h2>
+              <ul id="r-achievements"></ul>
+            </section>
+
+            <div class="r-bottom-row">
+              <section class="r-section r-half" id="r-languages-section" hidden>
+                <h2>Languages</h2>
+                <p id="r-languages"></p>
+              </section>
+              <section class="r-section r-half" id="r-interests-section" hidden>
+                <h2>Interests</h2>
+                <p id="r-interests"></p>
+              </section>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- ========================= FEATURES SECTION ========================= -->
+<section class="features-section" id="features">
+  <div class="section-heading">
+    <span class="eyebrow center">Features</span>
+    <h2>Everything a job-ready resume needs</h2>
+    <p class="section-sub">ResumeCraft handles the formatting, spacing, and export headaches so you can focus on your story.</p>
+  </div>
+
+  <div class="features-grid">
+    <div class="feature-card glass">
+      <div class="feature-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+      </div>
+      <h3>Live Preview</h3>
+      <p>Every keystroke updates your resume instantly — no refresh, no guessing how it'll look.</p>
+    </div>
+    <div class="feature-card glass">
+      <div class="feature-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"/></svg>
+      </div>
+      <h3>One-Click Download</h3>
+      <p>Export a polished, print-ready PDF that matches your on-screen preview exactly.</p>
+    </div>
+    <div class="feature-card glass">
+      <div class="feature-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+      </div>
+      <h3>ATS-Friendly</h3>
+      <p>Clean semantic structure and real text — no skill bars or graphics that confuse parsers.</p>
+    </div>
+    <div class="feature-card glass">
+      <div class="feature-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+      </div>
+      <h3>Professional Design</h3>
+      <p>A refined, minimalist layout inspired by resumes that actually get callbacks.</p>
+    </div>
+    <div class="feature-card glass">
+      <div class="feature-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="6" y="2" width="12" height="20" rx="1"/></svg>
+      </div>
+      <h3>Perfect A4 Format</h3>
+      <p>Content auto-scales to fit one true A4 page — never a clipped or overflowing resume.</p>
+    </div>
+    <div class="feature-card glass">
+      <div class="feature-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      </div>
+      <h3>Easy Editing</h3>
+      <p>Add or remove projects, roles, and skills freely — the layout adapts as you go.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= ABOUT SECTION ========================= -->
+<section class="about-section" id="about">
+  <div class="about-container">
+    <div class="about-copy">
+      <span class="eyebrow">About ResumeCraft</span>
+      <h2>Built for job seekers who want it done right.</h2>
+      <p>ResumeCraft was created to remove the friction between "I need a resume" and "I have a resume I'm proud of." No accounts, no watermarks, no design decisions to agonize over — just a clean form, a live preview, and a resume styled the way hiring managers actually like to read.</p>
+      <p>Everything happens in your browser. Your data, including your photo, never leaves your device unless you choose to download it.</p>
+      <div class="about-stats">
+        <div><strong>10</strong><span>Content sections</span></div>
+        <div><strong>1</strong><span>Perfectly-fit page</span></div>
+        <div><strong>0</strong><span>Sign-ups required</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= CONTACT SECTION ========================= -->
+<section class="contact-section" id="contact">
+  <div class="section-heading">
+    <span class="eyebrow center">Contact</span>
+    <h2>Questions or feedback?</h2>
+    <p class="section-sub">We'd love to hear from you — reach out any time.</p>
+  </div>
+  <div class="contact-card glass">
+    <div class="contact-item">
+      <strong>Email</strong>
+      <span>hello@resumecraft.app</span>
+    </div>
+    <div class="contact-item">
+      <strong>Support</strong>
+      <span>Mon – Fri, 9am – 6pm</span>
+    </div>
+    <div class="contact-item">
+      <strong>Response Time</strong>
+      <span>Within 24 hours</span>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= FOOTER ========================= -->
+<footer class="site-footer">
+  <div class="footer-container">
+    <div class="footer-brand">
+      <a href="#home" class="nav-logo">
+        <svg class="logo-mark" width="30" height="30" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="1" y="1" width="32" height="32" rx="9" fill="#F8FAFC"/>
+          <path d="M10 24V10.8C10 10.3582 10.3582 10 10.8 10H18.2C20.6 10 22.5 11.9 22.5 14.3V14.3C22.5 16.34 21.06 18.06 19.1 18.5L23 24H19.7L16.2 18.7H12.9V24H10Z" fill="#1E3A8A"/>
+          <path d="M12.9 12.5V16.2H17.9C19 16.2 19.9 15.35 19.9 14.35C19.9 13.35 19 12.5 17.9 12.5H12.9Z" fill="#F8FAFC"/>
+        </svg>
+        <span class="logo-text light">Resume<span class="logo-accent">Craft</span></span>
+      </a>
+      <p>Build a professional, ATS-friendly resume in minutes — free, private, and yours to keep.</p>
+    </div>
+
+    <div class="footer-links">
+      <h4>Quick Links</h4>
+      <a href="#home">Home</a>
+      <a href="#builder">Resume Builder</a>
+      <a href="#features">Features</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </div>
+
+    <div class="footer-social">
+      <h4>Follow</h4>
+      <div class="social-icons">
+        <a href="#" aria-label="Twitter"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg></a>
+        <a href="#" aria-label="LinkedIn"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+        <a href="#" aria-label="GitHub"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.4 9.4 0 015 0c1.91-1.3 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0012 2z"/></svg></a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; <span id="year"></span> ResumeCraft. All rights reserved.</p>
+  </div>
+</footer>
+
+<!-- PDF generation overlay -->
+<div class="pdf-overlay" id="pdfOverlay" hidden>
+  <div class="pdf-overlay-box">
+    <div class="pdf-spinner"></div>
+    <p>Generating your PDF…</p>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
