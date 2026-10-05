@@ -419,14 +419,17 @@ function autoFitResumeToPage() {
 /* =========================================================
    9. DOWNLOAD PDF
    ========================================================= */
-function downloadPDF() {
+async function downloadPDF() {
   if (!validateForm()) {
-    document.getElementById("fullName").scrollIntoView({ behavior: "smooth", block: "center" });
+    document.getElementById("fullName").scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
     return;
   }
 
   if (typeof html2pdf === "undefined") {
-    alert("The PDF engine couldn't load (this can happen if you're offline or a script was blocked). Please check your internet connection and try again.");
+    alert("PDF engine couldn't load. Please check your internet connection.");
     return;
   }
 
@@ -440,7 +443,6 @@ function downloadPDF() {
   navBtn.disabled = true;
   overlay.hidden = false;
 
-  // Remember the preview's current inline styles so we can restore them exactly
   const savedPageTransform = resumePage.style.transform;
   const savedPageMargin = resumePage.style.marginBottom;
   const savedInnerTransform = resumeInner.style.transform;
@@ -451,49 +453,83 @@ function downloadPDF() {
     resumePage.style.marginBottom = savedPageMargin;
     resumeInner.style.transform = savedInnerTransform;
     resumeInner.style.width = savedInnerWidth;
+
     overlay.hidden = true;
     btn.disabled = false;
     navBtn.disabled = false;
   }
 
-  // Render the resume at its true, unscaled A4 size (removing the preview's
-  // zoomed-out display transform) so html2canvas captures it at full, correct
-  // dimensions — capturing the real on-page element directly, with no hidden
-  // clones or off-screen positioning, is by far the most reliable approach.
-  resumePage.style.transform = "none";
-  resumePage.style.marginBottom = "0";
-  resumeInner.style.transform = "scale(1)";
-  resumeInner.style.width = "100%";
+  try {
+    // Remove preview scaling
+    resumePage.style.transform = "none";
+    resumePage.style.marginBottom = "0";
 
-  const pageHeightPx = resumePage.clientHeight;
-  const contentHeight = resumeInner.scrollHeight;
-  if (contentHeight > pageHeightPx) {
-    const scale = Math.max(0.62, pageHeightPx / contentHeight);
-    resumeInner.style.transform = `scale(${scale})`;
-    resumeInner.style.width = `${100 / scale}%`;
-  }
+    // Force layout update
+    void resumePage.offsetHeight;
 
-  const opt = {
-    margin: 0,
-    filename: `${(document.getElementById("fullName").value.trim() || "resume").replace(/\s+/g, "_")}_Resume.pdf`,
-    image: { type: "jpeg", quality: 0.98 },
-    html2canvas: { scale: 3, useCORS: true, backgroundColor: "#ffffff" },
-    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-    pagebreak: { mode: ["avoid-all"] }
-  };
+    // Wait for images
+    const images = resumePage.querySelectorAll("img");
 
-  // Give the browser a moment to apply the un-scaled layout before capture
-  requestAnimationFrame(() => {
-    setTimeout(() => {
-      html2pdf().set(opt).from(resumePage).save()
-        .then(restorePreview)
-        .catch(err => {
-          restorePreview();
-          console.error("PDF generation failed:", err);
-          alert("Something went wrong generating the PDF. Please try again.");
+    await Promise.all(
+      [...images].map(img => {
+        if (img.complete) return Promise.resolve();
+
+        return new Promise(resolve => {
+          img.onload = resolve;
+          img.onerror = resolve;
         });
-    }, 50);
-  });
+      })
+    );
+
+    // Wait for browser rendering
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    await new Promise(resolve => requestAnimationFrame(resolve));
+
+    // Small extra delay
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    const opt = {
+      margin: 0,
+      filename: `${(
+        document.getElementById("fullName").value.trim() || "resume"
+      ).replace(/\s+/g, "_")}_Resume.pdf`,
+
+      image: {
+        type: "jpeg",
+        quality: 0.95
+      },
+
+      html2canvas: {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: "#ffffff",
+        logging: false
+      },
+
+      jsPDF: {
+        unit: "mm",
+        format: "a4",
+        orientation: "portrait"
+      },
+
+      pagebreak: {
+    mode: ["css", "legacy"]
+}
+    };
+
+    await html2pdf()
+      .set(opt)
+      .from(resumePage)
+      .save();
+
+    restorePreview();
+
+  } catch (err) {
+    console.error("PDF generation failed:", err);
+    restorePreview();
+    alert("Something went wrong generating the PDF. Please try again.");
+  }
 }
 
 /* =========================================================
@@ -533,13 +569,13 @@ function loadSampleResume() {
 
   const setVal = (id, value) => { document.getElementById(id).value = value; };
 
-  setVal("fullName", "Ananya Rao");
+  setVal("fullName", "Alex John");
   setVal("jobTitle", "Full-Stack Developer");
   setVal("phone", "+91 98765 43210");
-  setVal("email", "ananya.rao@email.com");
+  setVal("email", "alex.rao@email.com");
   setVal("linkedin", "linkedin.com/in/ananyarao");
   setVal("github", "github.com/ananyarao");
-  setVal("portfolio", "ananyarao.dev");
+  setVal("portfolio", "alex.dev");
   setVal("address", "Hyderabad, India");
   setVal("summary", "Full-stack developer with 3+ years of experience building scalable web applications using React and Node.js. Passionate about clean code, performance optimization, and mentoring junior developers.");
 
