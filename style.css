@@ -449,14 +449,14 @@ h1, h2, h3, h4 { font-family: var(--font-display); color: var(--color-heading); 
 .resume-page {
   width: 210mm;
   min-height: 297mm;
-  height: 297mm;
+  height: 297;
   background: #fff;
   box-shadow: var(--shadow-lg);
   border-radius: 4px;
   transform: scale(0.72);
   transform-origin: top center;
   margin-bottom: -80mm; /* compensates for scale so stage doesn't leave huge gap */
-  overflow: hidden;
+  overflow: visible;
   flex-shrink: 0;
 }
 
@@ -464,8 +464,9 @@ h1, h2, h3, h4 { font-family: var(--font-display); color: var(--color-heading); 
   font-family: var(--font-resume);
   color: #374151;
   padding: 15mm 16mm;
-  height: 100%;
-  overflow: hidden;
+  height: auto;
+  min-height: 100%;
+  overflow: visible;
   transform-origin: top left;
 }
 
